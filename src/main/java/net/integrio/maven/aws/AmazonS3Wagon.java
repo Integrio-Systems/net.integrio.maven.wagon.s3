@@ -93,14 +93,7 @@ public final class AmazonS3Wagon extends AbstractWagon {
     }
 
 
-    private static Regions getBucketRegion(AWSCredentialsProvider credentialsProvider, ClientConfiguration clientConfiguration, String bucketName) {
-        return Regions.fromName(AmazonS3Client.builder()
-                .withCredentials(credentialsProvider)
-                .withClientConfiguration(clientConfiguration)
-                .enableForceGlobalBucketAccess()
-                .build()
-                .getBucketLocation(bucketName));
-    }
+
 
     @Override
     protected void connectToRepository(Repository repository, AuthenticationInfo authenticationInfo,
@@ -117,7 +110,7 @@ public final class AmazonS3Wagon extends AbstractWagon {
             this.amazonS3 = AmazonS3Client.builder()
                     .withCredentials(credentialsProvider)
                     .withClientConfiguration(clientConfiguration)
-                    .withRegion(getBucketRegion(credentialsProvider, clientConfiguration, this.bucketName))
+                    .withRegion(Regions.DEFAULT_REGION)
                     .build();
 
 
@@ -207,8 +200,6 @@ public final class AmazonS3Wagon extends AbstractWagon {
     protected void putResource(File source, String destination, TransferProgress transferProgress) throws TransferFailedException,
             ResourceDoesNotExistException {
         String key = getKey(this.baseDirectory, destination);
-
-        //mkdirs(amazonS3, this.bucketName, key, 0);
 
         InputStream in = null;
         try {

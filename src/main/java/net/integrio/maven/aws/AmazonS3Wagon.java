@@ -23,6 +23,8 @@ import org.apache.maven.wagon.authentication.AuthenticationException;
 import org.apache.maven.wagon.authentication.AuthenticationInfo;
 import org.apache.maven.wagon.proxy.ProxyInfoProvider;
 import org.apache.maven.wagon.repository.Repository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,6 +39,8 @@ import java.util.regex.Pattern;
 
 
 public final class AmazonS3Wagon extends AbstractWagon {
+    private static final Logger logger
+            = LoggerFactory.getLogger(AbstractWagon.class);
 
     private static final String KEY_FORMAT = "%s%s";
 
@@ -93,8 +97,6 @@ public final class AmazonS3Wagon extends AbstractWagon {
     }
 
 
-
-
     @Override
     protected void connectToRepository(Repository repository, AuthenticationInfo authenticationInfo,
                                        ProxyInfoProvider proxyInfoProvider) throws AuthenticationException {
@@ -105,16 +107,19 @@ public final class AmazonS3Wagon extends AbstractWagon {
 
             this.bucketName = S3Utils.getBucketName(repository);
             this.baseDirectory = S3Utils.getBaseDirectory(repository);
-
-
             this.amazonS3 = AmazonS3Client.builder()
                     .withCredentials(credentialsProvider)
                     .withClientConfiguration(clientConfiguration)
-                    .withRegion(Regions.DEFAULT_REGION)
+                    .withRegion(getBucketRegion(credentialsProvider, clientConfiguration, bucketName))
                     .build();
 
 
         }
+    }
+
+    private static Regions getBucketRegion(AWSCredentialsProvider credentialsProvider, ClientConfiguration clientConfiguration, String bucketName) {
+
+        return Regions.US_EAST_1;
     }
 
     @Override
@@ -200,7 +205,6 @@ public final class AmazonS3Wagon extends AbstractWagon {
     protected void putResource(File source, String destination, TransferProgress transferProgress) throws TransferFailedException,
             ResourceDoesNotExistException {
         String key = getKey(this.baseDirectory, destination);
-
         InputStream in = null;
         try {
             ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -211,8 +215,10 @@ public final class AmazonS3Wagon extends AbstractWagon {
 
             this.amazonS3.putObject(new PutObjectRequest(this.bucketName, key, in, objectMetadata));
         } catch (AmazonServiceException e) {
+            logger.error("AWS", e);
             throw new TransferFailedException(String.format("Cannot write file to '%s'", destination), e);
         } catch (FileNotFoundException e) {
+            logger.error("FNF", e);
             throw new ResourceDoesNotExistException(String.format("Cannot read file from '%s'", source), e);
         } finally {
             IOUtils.closeQuietly(in);

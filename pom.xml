@@ -47,7 +47,7 @@
 
 
     <properties>
-        <amazonaws.version>1.11.782</amazonaws.version>
+        <amazonaws.version>1.12.261</amazonaws.version>
         <wagon.version>3.4.0</wagon.version>
 
         <slf4j.version>1.7.25</slf4j.version>

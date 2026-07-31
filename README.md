@@ -1,4 +1,4 @@
-# AWS Maven Wagon
+# Integrio Maven Wagon
 
 
 
@@ -25,7 +25,7 @@ To publish Maven artifacts to S3 a build extension must be defined in a project'
     <extensions>
       ...
       <extension>
-        <groupId>com.github.minordima</groupId>
+        <groupId>net.integrio</groupId>
         <artifactId>maven.wagon.s3</artifactId>
         <version>1.1.0</version>
       </extension>
@@ -156,7 +156,7 @@ Use `s3.private.<REGION>.cloud-object-storage.appdomain.cloud` from inside IBM C
     <extensions>
       ...
       <extension>
-        <groupId>com.github.minordima</groupId>
+        <groupId>net.integrio</groupId>
         <artifactId>maven.wagon.s3</artifactId>
         <version>1.1.0</version>
       </extension>

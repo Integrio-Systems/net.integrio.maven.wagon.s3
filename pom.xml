@@ -8,9 +8,10 @@
     <version>1.1.0</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Fork for Maven wagon support for s3:// urls</description>
+    <description>Maven wagon for s3:// urls on Amazon S3 and cos:// urls on IBM Cloud Object Storage</description>
 
-    <url>https://github.com/minorDima/net.integrio.maven.wagon.s3</url>
+
+    <url>https://github.com/Integrio-Systems/net.integrio.maven.wagon.s3</url>
 
     <licenses>
         <license>
@@ -38,9 +39,9 @@
 
     <scm>
         <!-- Should be format scm:git:git or scm:git:https -->
-        <connection>scm:git:https://github.com/minorDima/maven.git</connection>
-        <developerConnection>scm:git:ssh://github.com/minorDima/maven.git</developerConnection>
-        <url>https://github.com/minorDima/maven</url>
+        <connection>scm:git:https://github.com/Integrio-Systems/net.integrio.maven.wagon.s3.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/Integrio-Systems/net.integrio.maven.wagon.s3.git</developerConnection>
+        <url>https://github.com/Integrio-Systems/net.integrio.maven.wagon.s3</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -161,37 +162,6 @@
 
     </dependencies>
 
-    <profiles>
-        <!-- GPG Signature on release -->
-        <profile>
-            <id>release-sign-artifacts</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
     <build>
 
 
@@ -241,35 +211,30 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--
+                Publishes to Maven Central through the Central Portal. The plugin takes the place of
+                maven-deploy-plugin, so `mvn deploy` uploads the bundle instead of looking for a
+                distributionManagement repository. The legacy OSSRH staging of
+                nexus-staging-maven-plugin was decommissioned in 2025.
+
+                Set autoPublish to true to release without the confirmation in the portal, keeping in
+                mind that a version in Maven Central can never be replaced.
+            -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.0.0-M1</version>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.11.0</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>false</autoPublish>
+                    <waitUntil>validated</waitUntil>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
+                <version>3.2.8</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>

@@ -15,7 +15,7 @@ Next to `s3://` urls the extension serves `cos://` urls backed by [IBM Cloud Obj
 
 
 ## Usage
-To publish Maven artifacts to S3 a build extension must be defined in a project's `pom.xml`.  The latest version of the wagon can be found on the [`aws-maven`](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.platform-team%22%20AND%20a%3A%22aws-maven%22) page in Maven Central.
+To publish Maven artifacts to S3 a build extension must be defined in a project's `pom.xml`.  The latest version of the wagon can be found on the [`net.integrio:maven.wagon`](https://central.sonatype.com/artifact/net.integrio/maven.wagon) page in Maven Central.
 
 ```xml
 <project>
@@ -26,7 +26,7 @@ To publish Maven artifacts to S3 a build extension must be defined in a project'
       ...
       <extension>
         <groupId>net.integrio</groupId>
-        <artifactId>maven.wagon.s3</artifactId>
+        <artifactId>maven.wagon</artifactId>
         <version>1.1.0</version>
       </extension>
       ...
@@ -157,7 +157,7 @@ Use `s3.private.<REGION>.cloud-object-storage.appdomain.cloud` from inside IBM C
       ...
       <extension>
         <groupId>net.integrio</groupId>
-        <artifactId>maven.wagon.s3</artifactId>
+        <artifactId>maven.wagon</artifactId>
         <version>1.1.0</version>
       </extension>
       ...

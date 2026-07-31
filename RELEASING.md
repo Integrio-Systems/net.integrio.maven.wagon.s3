@@ -29,18 +29,35 @@ The releases up to 1.0.2 sit under the `com.github.minordima` namespace, which b
 that is no longer used. They stay where they are; 1.1.0 and later live under `net.integrio`.
 
 ### 2. Create a signing key
-Central rejects unsigned artifacts and looks the public key up on a keyserver.
+Central rejects unsigned artifacts and looks the public key up on a keyserver. Nothing registers the
+key with Sonatype, so a lost key is replaced by simply generating the next one.
 
 ```bash
-gpg --full-generate-key                     # rsa4096, minor@integrio.net
-gpg --list-secret-keys --keyid-format long  # note the key id
+# rsa and rsa, 4096 bits, no expiry, "Dima Ermak <minor@integrio.net>", strong passphrase
+gpg --full-generate-key
+
+# the id is what follows the slash of the sec line: sec rsa4096/A1B2C3D4E5F67890
+gpg --list-secret-keys --keyid-format long
+
+# central resolves the public key here, without it the deployment is rejected
 gpg --keyserver keyserver.ubuntu.com --send-keys <KEY_ID>
 gpg --keyserver keys.openpgp.org --send-keys <KEY_ID>
+
+# confirm it arrived, propagation takes a couple of minutes
+curl -s "https://keyserver.ubuntu.com/pks/lookup?op=index&search=0x<KEY_ID>&options=mr&fingerprint=on"
+
+# while the key is still at hand: without this, a leaked key can never be revoked
+gpg --output ~/net-integrio-revoke.asc --gen-revoke <KEY_ID>
+gpg --export-secret-keys --armor <KEY_ID> > ~/net-integrio-signing-key.asc
 ```
 
-Keep the passphrase in a password manager, not in a file next to the build. Back the secret key up
-(`gpg --export-secret-keys --armor <KEY_ID>`): the key of the 2020 release is gone, which is why
-1.1.0 needs a new one.
+Move both files into the password manager and delete them from disk, and keep the passphrase there as
+a separate entry. Never in a file next to the build: the `release.properties` of the 2020 release
+carried `-Dgpg.passphrase` in plain text, which is why that key counts as burned rather than merely
+lost.
+
+`mvn clean verify` then asks for the passphrase and leaves an `.asc` next to every artifact in
+`target`. Should `gpg` fail to ask in a non interactive shell: `export GPG_TTY=$(tty)`.
 
 ### 3. Store the portal token
 **Account** → **Generate User Token** in the portal, then in `~/.m2/settings.xml`:

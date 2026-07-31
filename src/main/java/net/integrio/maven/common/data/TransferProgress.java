@@ -1,6 +1,6 @@
 
 
-package net.integrio.maven.aws.data;
+package net.integrio.maven.common.data;
 
 public interface TransferProgress {
 

@@ -1,9 +1,9 @@
 
 
-package net.integrio.maven.aws.data.transfer;
+package net.integrio.maven.common.data.transfer;
 
-import net.integrio.maven.aws.data.TransferListenerSupport;
-import net.integrio.maven.aws.data.TransferProgress;
+import net.integrio.maven.common.data.TransferListenerSupport;
+import net.integrio.maven.common.data.TransferProgress;
 import org.apache.maven.wagon.resource.Resource;
 
 public final class StandardTransferProgress implements TransferProgress {

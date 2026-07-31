@@ -1,6 +1,6 @@
 
 
-package net.integrio.maven.aws.data;
+package net.integrio.maven.common.data;
 
 import org.apache.maven.wagon.events.TransferListener;
 import org.apache.maven.wagon.resource.Resource;

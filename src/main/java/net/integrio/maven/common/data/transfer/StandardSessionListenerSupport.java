@@ -1,7 +1,7 @@
 
-package net.integrio.maven.aws.data.transfer;
+package net.integrio.maven.common.data.transfer;
 
-import net.integrio.maven.aws.data.SessionListenerSupport;
+import net.integrio.maven.common.data.SessionListenerSupport;
 import org.apache.maven.wagon.Wagon;
 import org.apache.maven.wagon.events.SessionEvent;
 import org.apache.maven.wagon.events.SessionListener;

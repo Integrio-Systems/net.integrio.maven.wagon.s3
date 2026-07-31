@@ -5,7 +5,7 @@
 
     <groupId>com.github.minordima</groupId>
     <artifactId>maven.wagon.s3</artifactId>
-    <version>1.0.2</version>
+    <version>1.1.0</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Fork for Maven wagon support for s3:// urls</description>
@@ -48,17 +48,49 @@
 
     <properties>
         <amazonaws.version>1.11.782</amazonaws.version>
+        <ibmcos.version>2.15.1</ibmcos.version>
         <wagon.version>3.4.0</wagon.version>
 
         <slf4j.version>1.7.25</slf4j.version>
         <logback.version>1.2.3</logback.version>
 
+        <!-- shared by the AWS and the IBM COS sdk, both of which ship their own expected version -->
+        <jackson.version>2.21.2</jackson.version>
+        <httpclient.version>4.5.14</httpclient.version>
+        <jodatime.version>2.13.1</jodatime.version>
+
+        <junit.version>5.10.2</junit.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <!--
+                The AWS sdk is built against much older versions than the IBM COS sdk. Without
+                these, maven resolves the older ones and the IBM COS sdk fails at runtime.
+            -->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${jodatime.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
 
@@ -86,6 +118,17 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>com.ibm.cos</groupId>
+            <artifactId>ibm-cos-java-sdk-s3</artifactId>
+            <version>${ibmcos.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>org.apache.maven.wagon</groupId>
             <artifactId>wagon-provider-api</artifactId>
             <version>${wagon.version}</version>
@@ -109,6 +152,12 @@
             <version>3.7</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
@@ -155,6 +204,12 @@
                     <source>11</source>
                     <target>11</target>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
             </plugin>
 
             <plugin>

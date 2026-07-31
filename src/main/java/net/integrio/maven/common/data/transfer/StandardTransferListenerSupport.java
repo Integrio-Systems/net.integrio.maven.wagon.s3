@@ -1,8 +1,8 @@
 
 
-package net.integrio.maven.aws.data.transfer;
+package net.integrio.maven.common.data.transfer;
 
-import net.integrio.maven.aws.data.TransferListenerSupport;
+import net.integrio.maven.common.data.TransferListenerSupport;
 import org.apache.maven.wagon.Wagon;
 import org.apache.maven.wagon.events.TransferEvent;
 import org.apache.maven.wagon.events.TransferListener;

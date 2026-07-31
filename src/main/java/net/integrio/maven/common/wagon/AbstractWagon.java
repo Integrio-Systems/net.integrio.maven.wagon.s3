@@ -1,12 +1,12 @@
 
-package net.integrio.maven.aws.maven;
+package net.integrio.maven.common.wagon;
 
-import net.integrio.maven.aws.data.SessionListenerSupport;
-import net.integrio.maven.aws.data.TransferListenerSupport;
-import net.integrio.maven.aws.data.TransferProgress;
-import net.integrio.maven.aws.data.transfer.StandardSessionListenerSupport;
-import net.integrio.maven.aws.data.transfer.StandardTransferListenerSupport;
-import net.integrio.maven.aws.data.transfer.StandardTransferProgress;
+import net.integrio.maven.common.data.SessionListenerSupport;
+import net.integrio.maven.common.data.TransferListenerSupport;
+import net.integrio.maven.common.data.TransferProgress;
+import net.integrio.maven.common.data.transfer.StandardSessionListenerSupport;
+import net.integrio.maven.common.data.transfer.StandardTransferListenerSupport;
+import net.integrio.maven.common.data.transfer.StandardTransferProgress;
 import org.apache.maven.wagon.ConnectionException;
 import org.apache.maven.wagon.ResourceDoesNotExistException;
 import org.apache.maven.wagon.TransferFailedException;

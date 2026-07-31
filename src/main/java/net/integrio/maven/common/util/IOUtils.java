@@ -1,6 +1,6 @@
 
 
-package net.integrio.maven.aws.util;
+package net.integrio.maven.common.util;
 
 import java.io.Closeable;
 import java.io.IOException;

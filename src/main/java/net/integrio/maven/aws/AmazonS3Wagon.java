@@ -11,12 +11,13 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.internal.Mimetypes;
 import com.amazonaws.services.s3.model.*;
 import net.integrio.maven.aws.credentials.AWSMavenCredentialsProviderChain;
-import net.integrio.maven.aws.data.TransferProgress;
-import net.integrio.maven.aws.data.transfer.TransferProgressFileInputStream;
-import net.integrio.maven.aws.data.transfer.TransferProgressFileOutputStream;
-import net.integrio.maven.aws.maven.AbstractWagon;
-import net.integrio.maven.aws.util.IOUtils;
 import net.integrio.maven.aws.util.S3Utils;
+import net.integrio.maven.common.data.TransferProgress;
+import net.integrio.maven.common.data.transfer.TransferProgressFileInputStream;
+import net.integrio.maven.common.data.transfer.TransferProgressFileOutputStream;
+import net.integrio.maven.common.util.IOUtils;
+import net.integrio.maven.common.util.RepositoryUtils;
+import net.integrio.maven.common.wagon.AbstractWagon;
 import org.apache.maven.wagon.ResourceDoesNotExistException;
 import org.apache.maven.wagon.TransferFailedException;
 import org.apache.maven.wagon.authentication.AuthenticationException;
@@ -40,7 +41,7 @@ import java.util.regex.Pattern;
 
 public final class AmazonS3Wagon extends AbstractWagon {
     private static final Logger logger
-            = LoggerFactory.getLogger(AbstractWagon.class);
+            = LoggerFactory.getLogger(AmazonS3Wagon.class);
 
     private static final String KEY_FORMAT = "%s%s";
 
@@ -106,7 +107,7 @@ public final class AmazonS3Wagon extends AbstractWagon {
             ClientConfiguration clientConfiguration = S3Utils.getClientConfiguration(proxyInfoProvider);
 
             this.bucketName = S3Utils.getBucketName(repository);
-            this.baseDirectory = S3Utils.getBaseDirectory(repository);
+            this.baseDirectory = RepositoryUtils.getBaseDirectory(repository);
             this.amazonS3 = AmazonS3Client.builder()
                     .withCredentials(credentialsProvider)
                     .withClientConfiguration(clientConfiguration)
@@ -168,7 +169,7 @@ public final class AmazonS3Wagon extends AbstractWagon {
             directoryContents.addAll(getResourceNames(objectListing, pattern));
 
             while (objectListing.isTruncated()) {
-                objectListing = this.amazonS3.listObjects(listObjectsRequest);
+                objectListing = this.amazonS3.listNextBatchOfObjects(objectListing);
                 directoryContents.addAll(getResourceNames(objectListing, pattern));
             }
 

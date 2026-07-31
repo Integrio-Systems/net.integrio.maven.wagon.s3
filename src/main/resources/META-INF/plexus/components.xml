@@ -6,5 +6,11 @@
             <implementation>net.integrio.maven.aws.AmazonS3Wagon</implementation>
             <instantiation-strategy>per-lookup</instantiation-strategy>
         </component>
+        <component>
+            <role>org.apache.maven.wagon.Wagon</role>
+            <role-hint>cos</role-hint>
+            <implementation>net.integrio.maven.ibm.IbmCosWagon</implementation>
+            <instantiation-strategy>per-lookup</instantiation-strategy>
+        </component>
     </components>
 </component-set>

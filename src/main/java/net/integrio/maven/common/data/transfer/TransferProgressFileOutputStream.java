@@ -1,7 +1,7 @@
 
-package net.integrio.maven.aws.data.transfer;
+package net.integrio.maven.common.data.transfer;
 
-import net.integrio.maven.aws.data.TransferProgress;
+import net.integrio.maven.common.data.TransferProgress;
 
 import java.io.File;
 import java.io.FileNotFoundException;

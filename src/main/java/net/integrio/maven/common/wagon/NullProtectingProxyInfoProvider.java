@@ -1,6 +1,6 @@
 
 
-package net.integrio.maven.aws.maven;
+package net.integrio.maven.common.wagon;
 
 import org.apache.maven.wagon.proxy.ProxyInfo;
 import org.apache.maven.wagon.proxy.ProxyInfoProvider;

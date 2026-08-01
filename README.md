@@ -27,7 +27,7 @@ To publish Maven artifacts to S3 a build extension must be defined in a project'
       <extension>
         <groupId>net.integrio</groupId>
         <artifactId>maven.wagon</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.1</version>
       </extension>
       ...
     </extensions>
@@ -158,7 +158,7 @@ Use `s3.private.<REGION>.cloud-object-storage.appdomain.cloud` from inside IBM C
       <extension>
         <groupId>net.integrio</groupId>
         <artifactId>maven.wagon</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.1</version>
       </extension>
       ...
     </extensions>
@@ -282,16 +282,30 @@ Everything except the credentials can be set in the `<configuration>` of the ser
 | `iamEndpoint`       | `ibm.cos.iamEndpoint`       | `IBM_AUTH_ENDPOINT`        | Token endpoint of IAM. Defaults to `https://iam.cloud.ibm.com/identity/token`
 | `pathStyleAccess`   |                             |                            | `false` addresses the bucket as a subdomain of the endpoint instead of as the first path segment. Defaults to `true`
 
-Credentials can be provided outside of `settings.xml` too, which is what a build server usually does. They are applied in the order below:
+Credentials can be provided outside of `settings.xml` too, which is what a build server usually does. The HMAC keys carry an `ibm.cos` / `IBM_COS_` prefix, so the keys of a COS bucket never get mixed up with the keys of an AWS account when the same build deploys to both. They are applied in the order below:
 
-* `ibm.cos.apiKey` system property or `IBM_API_KEY_ID` environment variable for IAM
-* `aws.accessKeyId` and `aws.secretKey` system properties for HMAC
-* `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables for HMAC
+| Credential                | System property           | Environment variable          |
+| ------------------------- | ------------------------- | ----------------------------- |
+| IAM API key               | `ibm.cos.apiKey`          | `IBM_API_KEY_ID`              |
+| HMAC `access_key_id`      | `ibm.cos.accessKeyId`     | `IBM_COS_ACCESS_KEY_ID`       |
+| HMAC `secret_access_key`  | `ibm.cos.secretAccessKey` | `IBM_COS_SECRET_ACCESS_KEY`   |
+
+The system property wins over the environment variable of the same credential, and an API key wins over HMAC keys. Both halves of an HMAC pair have to be set — one without the other fails the build with the name of the missing half instead of quietly reaching for the AWS keys.
+
+For backwards compatibility the unprefixed AWS names are still read for HMAC, after all of the above: the `aws.accessKeyId` and `aws.secretKey` system properties, then the `AWS_ACCESS_KEY_ID` (or `AWS_ACCESS_KEY`) and `AWS_SECRET_KEY` (or `AWS_SECRET_ACCESS_KEY`) environment variables. Prefer the prefixed names in new setups.
 
 So a build server needs no `settings.xml` at all when the repository url carries the endpoint:
 
 ```bash
 export IBM_API_KEY_ID=0123456789abcdefghijklmnopqrstuvwxyzABCDEFG
+mvn deploy
+```
+
+Or with HMAC credentials:
+
+```bash
+export IBM_COS_ACCESS_KEY_ID=0123456789abcdef0123456789abcdef
+export IBM_COS_SECRET_ACCESS_KEY=0123456789abcdef0123456789abcdef0123456789abcdef
 mvn deploy
 ```
 

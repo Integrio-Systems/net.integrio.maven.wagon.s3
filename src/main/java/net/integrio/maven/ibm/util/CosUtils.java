@@ -35,6 +35,14 @@ public abstract class CosUtils {
 
     public static final String API_KEY_VARIABLE = "IBM_API_KEY_ID";
 
+    public static final String ACCESS_KEY_PROPERTY = "ibm.cos.accessKeyId";
+
+    public static final String ACCESS_KEY_VARIABLE = "IBM_COS_ACCESS_KEY_ID";
+
+    public static final String SECRET_KEY_PROPERTY = "ibm.cos.secretAccessKey";
+
+    public static final String SECRET_KEY_VARIABLE = "IBM_COS_SECRET_ACCESS_KEY";
+
     public static final String SERVICE_INSTANCE_ID_PROPERTY = "ibm.cos.serviceInstanceId";
 
     public static final String SERVICE_INSTANCE_ID_VARIABLE = "IBM_SERVICE_INSTANCE_ID";

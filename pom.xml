@@ -5,7 +5,7 @@
 
     <groupId>net.integrio</groupId>
     <artifactId>maven.wagon</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Maven wagon for s3:// urls on Amazon S3 and cos:// urls on IBM Cloud Object Storage</description>
